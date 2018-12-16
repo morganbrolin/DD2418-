@@ -12,12 +12,11 @@ import sys
 import io
 
 class Rnn(object):
-	def __init__(self, filenames,epochs=5,batch_size=128,time_steps=5,lstm_size=100,maxlen = 30,generated_text_size = 400):
+	def __init__(self, filenames,epochs=30,batch_size=128,time_steps=5,maxlen = 20,generated_text_size = 400):
 		self.__vocab = set()
 		self.__sources = filenames
 		self.batch_size = batch_size
 		self.time_steps = time_steps
-		self.lstm_size = lstm_size
 		self.maxlen = maxlen
 		self.epochs = epochs
 		self.generated_text_size = generated_text_size
@@ -28,7 +27,6 @@ class Rnn(object):
 					yield self.clean_line(line)
 	def clean_line(self, line):
 		return line
-
 	def build_vocabulary(self):
 		"""
 		Build vocabulary of words from the provided text files
@@ -37,7 +35,7 @@ class Rnn(object):
 		for line in self.text_gen():
 			for word in line:
 				for char in word:
-					self.__vocab.add(char)
+					self.__vocab.add(char), 
 		self.__vocab.add(" ")
 
 		self.write_vocabulary()
@@ -114,7 +112,6 @@ class Rnn(object):
 		self.sentences,self.next_chars =self.sentenctifier()
 		self.test_sentences,self.test_next_chars =self.sentenctifier()
 		x,y = self.one_hot(self.sentences)
-		#callback genereate_text
 		model = Sequential()
 		self.model = model
 		model.add(LSTM(self.batch_size, input_shape=(self.maxlen, (len(self.w2i)))))
